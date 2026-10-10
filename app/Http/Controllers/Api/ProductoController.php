@@ -3,64 +3,40 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Almacen;
-use Illuminate\Http\Request;
+use App\Models\Producto;
+use App\Http\Requests\StoreProductoRequest;
+use App\Http\Requests\UpdateProductoRequest;
 
-class AlmacenController extends Controller
+class ProductoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return Almacen::paginate(10);
+        return Producto::paginate(10);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreProductoRequest $request)
     {
-        $request->validate([
-            'nombre_almacen' => 'required|string|max:255',
-            'tamaño'         => 'nullable|string|max:255',
-            'estado'         => 'boolean',
-        ]);
+        $producto = Producto::create($request->validated());
 
-        return Almacen::create($request->all());
+        return response()->json($producto, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Almacen $almacen)
+    public function show(Producto $producto)
     {
-        return $almacen;
+        return response()->json($producto, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Almacen $almacen)
+    public function update(UpdateProductoRequest $request, Producto $producto)
     {
-        $request->validate([
-            'nombre_almacen' => 'sometimes|required|string|max:255',
-            'tamaño'         => 'nullable|string|max:255',
-            'estado'         => 'boolean',
-        ]);
+        $producto->update($request->validated());
 
-        $almacen->update($request->all());
-
-        return $almacen;
+        return response()->json($producto, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Almacen $almacen)
+    public function destroy(Producto $producto)
     {
-        $almacen->delete();
+        $producto->delete();
 
-        return response()->json(['message' => 'Eliminado correctamente']);
+        return response()->json(['message' => 'Eliminado correctamente'], 200);
     }
 }

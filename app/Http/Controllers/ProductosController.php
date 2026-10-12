@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
+use App\Http\Resources\ProductoResource;
+
 class ProductosController extends Controller
 {
     /**
@@ -12,7 +14,9 @@ class ProductosController extends Controller
     public function index()
     {
         $productos = Producto::paginate(10);
-        return view('productos.index', compact('productos'));
+        return ProductoResource::collection($productos);
+
+        // Devuelve el JSON formateado correctamente con acentos y tildes visibles
     }
 
     /**
@@ -28,7 +32,8 @@ class ProductosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $productos = Producto::create($request->validated());
+            response()->setStatusCode(201);
     }
 
     /**

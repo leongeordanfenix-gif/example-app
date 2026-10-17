@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Producto;
-use App\Http\Resources\ProductoResource;
+use App\Http\Requests\StoreProductoRequest; // Usamos la clase de validación adecuada
 
 class ProductosController extends Controller
 {
@@ -14,9 +14,9 @@ class ProductosController extends Controller
     public function index()
     {
         $productos = Producto::paginate(10);
-        return ProductoResource::collection($productos);
 
-        // Devuelve el JSON formateado correctamente con acentos y tildes visibles
+        // Retorna la vista HTML con la lista de productos
+        return view('productos.index', compact('productos'));
     }
 
     /**
@@ -24,16 +24,17 @@ class ProductosController extends Controller
      */
     public function create()
     {
-        //
+        return view('productos.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductoRequest $request)
     {
-        $productos = Producto::create($request->validated());
-            response()->setStatusCode(201);
+        $producto = Producto::create($request->validated());
+
+        return redirect()->route('productos.index')->with('success', 'Producto creado correctamente');
     }
 
     /**
@@ -41,7 +42,8 @@ class ProductosController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $producto = Producto::findOrFail($id);
+        return view('productos.show', compact('producto'));
     }
 
     /**
@@ -49,7 +51,8 @@ class ProductosController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $producto = Producto::findOrFail($id);
+        return view('productos.edit', compact('producto'));
     }
 
     /**

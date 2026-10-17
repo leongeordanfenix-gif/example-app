@@ -13,4 +13,9 @@ class Producto extends Model
         'descripcion',
         'precio'
     ];
+
+    public function stocks()
+    {
+        return $this->hasMany(Stock_Almacen::class, 'producto_id');
+    }
 }

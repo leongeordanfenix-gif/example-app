@@ -17,8 +17,8 @@ class Almacen extends Model
         'estado',
     ];
 
-    public function productos()
+    public function stocks()
     {
-        return $this->hasMany(Producto::class);
+        return $this->hasMany(Stock_Almacen::class, 'almacen_id');
     }
 }
